@@ -1,0 +1,19 @@
+{
+    "description": "To de olho",
+    "name": "Helo Bolada",
+    "image": "https://bafkreicdftpjqwr5vj7igopqsi2hdyuq7mkpywtmxwmcne7wfewqqmsn4y.ipfs.dweb.link/",
+    "attributes": [
+        {
+            "trait_type": "Sedução", 
+            "value": "Muito Grande"
+        },
+        {
+            "trait_type": "Ódio", 
+            "value": "Muito Grande"
+        },
+        {
+            "trait_type": "Sono",
+            "value": "Muito Grande"
+        }
+    ]
+}

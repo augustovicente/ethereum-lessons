@@ -1,0 +1,11 @@
+{
+    "description": "Blusa Suja",
+    "name": "A LENDA",
+    "image": "https://bafkreid4mhgxfy5s6cpkxpbv43uoecu4ekinna4cey5356h4zgxlvh55yy.ipfs.dweb.link/",
+    "attributes": [
+        {
+            "trait_type": "Blusa", 
+            "value": "Suja"
+        }
+    ]
+}
