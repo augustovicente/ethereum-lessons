@@ -36,7 +36,7 @@ get_info().then((info) => {
 
     console.log(commit_info);
 
-    fs.writeFile(`hooks/${commit_info.commit_id}.json`, JSON.stringify(commit_info), function (err) {
+    fs.writeFile(`commits-register/${commit_info.commit_id}.json`, JSON.stringify(commit_info), function (err) {
         if (err) return console.log(err);
         console.log('Commit Registered > '+commit_info.commit_id);
         console.log(process.argv);
