@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const { exec } = require("child_process");
+
+let commit_info = {
+    'commit_id': process.argv[4],
+    'commit_parent': process.argv[3],
+    'commit_message': '',
+    'commit_date': '',
+    'commit_author': '',
+    'commit_branch': process.argv[3],
+    'commit_owner': '',
+    'commit_repo': '',
+}
+
+const get_info = () => {
+    return new Promise((resolve, reject) => {
+        exec(`git show --pretty=format:"Info:%an,%ad,%s" c426ab80d64f7c36d550161f9afce7b833d40634 | grep Info`, (error, stdout, stderr) => {
+            if(error || stderr)
+            {
+                reject(error || stderr);
+            }
+            else
+            {
+                resolve(stdout.split(','));
+            }
+        });
+    });
+}
+
+get_info().then((info) => {
+    commit_info.commit_author = info[0];
+    commit_info.commit_date = info[1];
+    commit_info.commit_message = info[2];
+
+    console.log(commit_info);
+
+    fs.writeFile(`hooks/${commit_info.commit_id}.json`, JSON.stringify(commit_info), function (err) {
+        if (err) return console.log(err);
+        console.log('Commit Registered > '+commit_info.commit_id);
+        console.log(process.argv);
+    });  
+})
