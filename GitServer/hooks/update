@@ -11,6 +11,7 @@ let commit_info = {
     'commit_branch': process.argv[3],
     'commit_owner': '',
     'commit_repo': '',
+    'commit_status': 'unregistered',
 }
 
 const get_info = () => {
