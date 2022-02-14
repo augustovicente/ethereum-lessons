@@ -30,7 +30,7 @@ const get_info = () => {
 }
 
 get_info().then((info) => {
-    commit_info.commit_author = info[0];
+    commit_info.commit_author = info[0].replace('Info:', '');
     commit_info.commit_date = info[1];
     commit_info.commit_message = info[2];
 
