@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Register Commits</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    </head>
+    <body style="display: flex; height: 100vh;">
+        <script>
+            let commits = [];
+            fetch('http://localhost:8080/commits-unregistered')
+                .then(async response => {
+                    commits = JSON.parse(await response.json());
+                    // add commits to the list of commits
+                    commits.forEach(commit => {
+                        let li = document.createElement('li');
+                        li.className = 'list-group-item d-flex align-items-center';
+
+                        let label = document.createElement('label');
+                        label.innerHTML = commit.commit_id;
+                        li.appendChild(label);
+
+                        let checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.name = 'commit-checkbox';
+                        checkbox.value = commit.commit_id;
+                        checkbox.className = 'ml-auto';
+                        li.appendChild(checkbox);
+
+                        document.getElementById('commit-list').appendChild(li);
+                    });
+                })
+                .then(data => console.log(data))
+                .catch(err => console.error(err));
+
+            const register_ethereum = ()=>{
+                
+            }
+        </script>
+        <div style="display: flex; margin:auto; height: fit-content; flex-direction: row; flex-wrap: wrap;">
+            <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
+                <h2 style="margin: auto;">Selecione os Commits que serão registrados:</h2>
+            </div>
+            <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
+                <ul style="width: 30vw" class="m-auto list-group" id="commit-list">
+                </ul>
+            </div>
+            <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
+                <button class="btn btn-success m-auto" onclick="register_ethereum()">
+                    Registrar
+                </button>
+            </div>
+        </div>
+    </body>
+</html>
