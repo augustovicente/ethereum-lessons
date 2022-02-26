@@ -8,13 +8,21 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     </head>
     <body style="display: flex; height: 100vh;">
+        <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+        <script src="./commit.js"></script>
         <script>
+
             let commits = [];
-            fetch('http://localhost:8080/commits-unregistered')
+            fetch('http://localhost:8080/commits-unregistered', {
+                method: 'GET',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+            })
                 .then(async response => {
                     commits = JSON.parse(await response.json());
                     // add commits to the list of commits
-                    commits.forEach(commit => {
+                    commits.forEach((commit, i) => {
                         let li = document.createElement('li');
                         li.className = 'list-group-item d-flex align-items-center';
 
@@ -35,11 +43,32 @@
                 .then(data => console.log(data))
                 .catch(err => console.error(err));
 
-            const register_ethereum = ()=>{
                 
+            const register_ethereum = async ()=>{
+                // get the commit ids selected and mint each one
+                let commit_ids = [];
+                let commit_checkboxes = document.getElementsByName('commit-checkbox');
+                for (let i = 0; i < commit_checkboxes.length; i++) {
+                    if(commit_checkboxes[i].checked)
+                    {
+                        console.log(await commit.methods.commits(commit_checkboxes[i].value).call())
+                        commit_ids.push(commit_checkboxes[i].value);
+                    }
+                }
+                // get the account address
+                const accounts = await web3.eth.getAccounts();
+                console.log(commit_ids)
+                // mint each commit
+                for(let i = 0; i < commit_ids.length; i++) {
+                    await commit.methods.mint(1, commit_ids[i]).send({
+                        from: accounts[0],
+                        value: web3.utils.toWei("0.1", "ether"),
+                        gas: 1000000
+                    });
+                }
             }
         </script>
-        <div style="display: flex; margin:auto; height: fit-content; flex-direction: row; flex-wrap: wrap;">
+        <form action='#' style="display: flex; margin:auto; height: fit-content; flex-direction: row; flex-wrap: wrap;">
             <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
                 <h2 style="margin: auto;">Selecione os Commits que serão registrados:</h2>
             </div>
@@ -48,10 +77,10 @@
                 </ul>
             </div>
             <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
-                <button class="btn btn-success m-auto" onclick="register_ethereum()">
+                <button class="btn btn-success m-auto" type="button" onclick="register_ethereum()">
                     Registrar
                 </button>
             </div>
-        </div>
+        </form>
     </body>
 </html>

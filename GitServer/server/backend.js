@@ -21,6 +21,7 @@ app.get('/commits-unregistered',(req,res) => {
 })
 
 app.get('/commits-unregistered',(req,res) => {
+    console.log('teste');
 
     const commits_folder = '../commits-register/';
     const commits_files = [];
@@ -34,12 +35,16 @@ app.get('/commits-unregistered',(req,res) => {
         });
         res.json(JSON.stringify(commits_files.filter(commit => commit.commit_status === 'registered')));
     });
-    
 })
 
 app.get('/register-commit', (req,res) =>
 {
     res.sendFile(__dirname+'/register-commit.html');
+})
+
+app.get('/commit.js', (req,res) =>
+{
+    res.sendFile(__dirname+'/commit.js');
 })
 
 app.listen(PORT ,()=>console.log(`Connected to ${PORT}`))
