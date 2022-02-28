@@ -50,7 +50,7 @@ contract Commit is ERC1155, Ownable
 
     function mint(uint256 amount, string memory data) public payable
     {
-        require(msg.value >= 0.1 ether, "To register the commit you should pay at least 0.1 ether");
+        // require(msg.value >= 0.1 ether, "To register the commit you should pay at least 0.1 ether");
 
         if(last_id > 0)
         {
@@ -68,6 +68,45 @@ contract Commit is ERC1155, Ownable
             commits[data] = last_id;
             // incrementando quando necessário
             last_id++;
+        }
+    }
+
+    function mint_batch(string[] memory data) public payable
+    {
+        // require(msg.value >= 0.1 ether, "To register the commit you should pay at least 0.1 ether");
+
+        uint[] memory ids = new uint[](data.length);
+        uint[] memory amounts = new uint[](data.length);
+        if(last_id > 0)
+        {
+            // incrementando quando necessário
+            last_id++;
+            for(uint i=last_id; i< data.length; i++)
+            {
+                amounts[i-last_id] = 1;
+                ids[i] = last_id;
+                // armazenando o novo commit
+                commits[data[i]] = last_id;
+                last_id++;
+            }
+
+            // mintando
+            _mintBatch(msg.sender, ids, amounts, "");
+            // _mint(msg.sender, last_id, amount, "");
+        }
+        else
+        {
+            for(uint i=last_id; i< data.length; i++)
+            {
+                amounts[i-last_id] = 1;
+                ids[i] = last_id;
+                // armazenando o novo commit
+                commits[data[i]] = last_id;
+                last_id++;
+            }
+            // mintando
+            _mintBatch(msg.sender, ids, amounts, "");
+            // _mint(msg.sender, last_id, amount, "");
         }
     }
 }

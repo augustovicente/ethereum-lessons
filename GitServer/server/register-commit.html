@@ -22,23 +22,31 @@
                 .then(async response => {
                     commits = JSON.parse(await response.json());
                     // add commits to the list of commits
-                    commits.forEach((commit, i) => {
-                        let li = document.createElement('li');
-                        li.className = 'list-group-item d-flex align-items-center';
-
-                        let label = document.createElement('label');
-                        label.innerHTML = commit.commit_id;
-                        li.appendChild(label);
-
-                        let checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.name = 'commit-checkbox';
-                        checkbox.value = commit.commit_id;
-                        checkbox.className = 'ml-auto';
-                        li.appendChild(checkbox);
-
-                        document.getElementById('commit-list').appendChild(li);
-                    });
+                    if(commits.length == 0)
+                    {
+                        let list = document.getElementById('commit-list');
+                        list.innerHTML = '<li class="list-group-item d-flex align-items-center justify-content-center">Nenhum commit não registrado!</li>';
+                    }
+                    else
+                    {
+                        commits.forEach((commit, i) => {
+                            let li = document.createElement('li');
+                            li.className = 'list-group-item d-flex align-items-center';
+    
+                            let label = document.createElement('label');
+                            label.innerHTML = commit.commit_id;
+                            li.appendChild(label);
+    
+                            let checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.name = 'commit-checkbox';
+                            checkbox.value = commit.commit_id;
+                            checkbox.className = 'ml-auto';
+                            li.appendChild(checkbox);
+    
+                            document.getElementById('commit-list').appendChild(li);
+                        });
+                    }
                 })
                 .then(data => console.log(data))
                 .catch(err => console.error(err));
@@ -55,17 +63,29 @@
                         commit_ids.push(commit_checkboxes[i].value);
                     }
                 }
+                if(commit_ids.length == 0)
+                {
+                    alert('Nenhum commit selecionado!');
+                    return;
+                }
                 // get the account address
                 const accounts = await web3.eth.getAccounts();
                 console.log(commit_ids)
-                // mint each commit
-                for(let i = 0; i < commit_ids.length; i++) {
-                    await commit.methods.mint(1, commit_ids[i]).send({
-                        from: accounts[0],
-                        value: web3.utils.toWei("0.1", "ether"),
-                        gas: 1000000
-                    });
-                }
+                // mint all commit
+                commit.methods.mint_batch(commit_ids).send({
+                    from: accounts[0],
+                    gas: 1000000
+                }).then(() =>
+                {
+                    fetch('http://localhost:8080/register-commits', {
+                        method: 'POST',
+                        headers: {
+                            'Access-Control-Allow-Origin': '*',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(commit_ids)
+                    })
+                });
             }
         </script>
         <form action='#' style="display: flex; margin:auto; height: fit-content; flex-direction: row; flex-wrap: wrap;">

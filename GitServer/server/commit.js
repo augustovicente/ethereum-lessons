@@ -1,7 +1,7 @@
 window.ethereum.request({ method: "eth_requestAccounts" });
 const web3 = new Web3(window.ethereum);
 
-const address = '0x7aAAbe93907ff57B176418B7A1743C9b68e77cDF';
+const address = '0xF8013B1580A05b992967E650FD99b844038c4E56';
 const abi = [
 	{
 		"inputs": [],
@@ -47,6 +47,19 @@ const abi = [
 			}
 		],
 		"name": "mint",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "data",
+				"type": "string[]"
+			}
+		],
+		"name": "mint_batch",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
