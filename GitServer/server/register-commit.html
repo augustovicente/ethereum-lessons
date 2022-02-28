@@ -9,11 +9,10 @@
     </head>
     <body style="display: flex; height: 100vh;">
         <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-        <script src="./commit.js"></script>
+        <script src="../commit.js"></script>
         <script>
-
             let commits = [];
-            fetch('http://localhost:8080/commits-unregistered', {
+            fetch(`./commits-unregistered`, {
                 method: 'GET',
                 headers: {
                     'Access-Control-Allow-Origin': '*',
@@ -77,7 +76,7 @@
                     gas: 1000000
                 }).then(() =>
                 {
-                    fetch('http://localhost:8080/register-commits', {
+                    fetch(`./register-commits`, {
                         method: 'POST',
                         headers: {
                             'Access-Control-Allow-Origin': '*',

@@ -2,10 +2,13 @@ const express = require('express');
 const app = express();
 const PORT = 8080;
 const fs = require('fs');
-app.use(express.json()); 
-app.get('/commits-unregistered',(req,res) => {
+const path_to_repos = '..';
 
-    const commits_folder = '../commits-register/';
+app.use(express.json());
+
+app.get('/:repo/commits-unregistered',(req,res) => {
+
+    const commits_folder = `${path_to_repos}/${req.params.repo}.git/commits-register/`;
     const commits_files = [];
 
     fs.readdir(commits_folder, (err, files) => {
@@ -20,10 +23,9 @@ app.get('/commits-unregistered',(req,res) => {
     
 })
 
-app.get('/commits-unregistered',(req,res) => {
-    console.log('teste');
+app.get('/:repo/commits-unregistered',(req,res) => {
 
-    const commits_folder = '../commits-register/';
+    const commits_folder = `${path_to_repos}/${req.params.repo}.git/commits-register/`;
     const commits_files = [];
 
     fs.readdir(commits_folder, (err, files) => {
@@ -37,17 +39,19 @@ app.get('/commits-unregistered',(req,res) => {
     });
 })
 
-app.get('/register-commit', (req,res) =>
+app.get('/:repo/register-commit', (req,res) =>
 {
     res.sendFile(__dirname+'/register-commit.html');
 })
 
-app.post('/register-commits', (req,res) =>
+app.post('/:repo/register-commits', (req,res) =>
 {
     const commit_data = req.body;
+    const commits_folder = `${path_to_repos}/${req.params.repo}.git/commits-register/`;
+
     for(const commit_id of commit_data)
     {
-        const commit_file = '../commits-register/'+commit_id+'.json';
+        const commit_file = commits_folder+commit_id+'.json';
         const commit_json = JSON.parse(fs.readFileSync(commit_file));
         commit_json.commit_status = 'registered';
         fs.writeFileSync(commit_file,JSON.stringify(commit_json));
