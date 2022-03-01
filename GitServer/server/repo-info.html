@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Repository Information</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    </head>
+    <body style="display: flex; flex-wrap: wrap;">
+        <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+        <script src="../commit.js"></script>
+        <script>
+            let commits_unregistered = [];
+            let commits_registered = [];
+
+            fetch(`./repo-info`, {
+                method: 'GET',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+            })
+                .then(async (res) =>
+                {
+                    res = JSON.parse(await res.json());
+                    console.log(res);
+                    // get the repo name
+                    let repo_name = document.getElementById('repo-name');
+                    repo_name.innerHTML = 'Repositório: ' + res.repo_name;
+                    // get the repo created
+                    res.repo_creation_date = new Date(res.repo_creation_date);
+                    res.repo_creation_date = res.repo_creation_date.toLocaleString();
+                    let repo_created = document.getElementById('repo-created');
+                    repo_created.innerHTML = 'Criação: ' + res.repo_creation_date;
+                })
+
+            fetch(`./commits-unregistered`, {
+                method: 'GET',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+            })
+                .then(async response => {
+                    commits_unregistered = JSON.parse(await response.json());
+                    // add commits to the list of commits
+                    if(commits_unregistered.length == 0)
+                    {
+                        let list = document.getElementById('commit-unregistered-list');
+                        list.innerHTML = '<li class="list-group-item d-flex align-items-center justify-content-center">Nenhum commit não registrado!</li>';
+                    }
+                    else
+                    {
+                        commits_unregistered.forEach((commit, i) => {
+                            let li = document.createElement('li');
+                            li.className = 'list-group-item d-flex align-items-center';
+    
+                            let label = document.createElement('label');
+                            label.innerHTML = commit.commit_id;
+                            label.className = 'mr-2';
+                            li.appendChild(label);
+
+                            // add button to open the commit
+                            let button = document.createElement('button');
+                            button.className = 'btn btn-primary ml-auto';
+                            button.innerHTML = 'Abrir';
+                            button.onclick = () => {
+                                // open the commit in new tab
+                                window.open(`./commit-info/${commit.commit_id}`, '_blank');
+                            }
+                            li.appendChild(button);
+    
+                            document.getElementById('commit-unregistered-list').appendChild(li);
+                        });
+                    }
+                })
+                .catch(err => console.error(err));
+
+            fetch(`./commits-registered`, {
+                method: 'GET',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+            })
+                .then(async response => {
+                    commits_registered = JSON.parse(await response.json());
+                    // add commits to the list of commits
+                    if(commits_registered.length == 0)
+                    {
+                        let list = document.getElementById('commit-registered-list');
+                        list.innerHTML = '<li class="list-group-item d-flex align-items-center justify-content-center">Nenhum commit não registrado!</li>';
+                    }
+                    else
+                    {
+                        commits_registered.forEach((commit, i) => {
+                            let li = document.createElement('li');
+                            li.className = 'list-group-item d-flex align-items-center';
+    
+                            let label = document.createElement('label');
+                            label.innerHTML = commit.commit_id;
+                            label.className = 'mr-2';
+                            li.appendChild(label);
+
+                            // add button to open the commit
+                            let button = document.createElement('button');
+                            button.className = 'btn btn-primary ml-auto';
+                            button.innerHTML = 'Abrir';
+                            button.onclick = () => {
+                                // open the commit in new tab
+                                window.open(`./commit-info/${commit.commit_id}`, '_blank');
+                            }
+                            li.appendChild(button);
+    
+                            document.getElementById('commit-registered-list').appendChild(li);
+                        });
+                    }
+                })
+                .catch(err => console.error(err));
+        </script>
+        <div class="col-12 p-5">
+            <h2 style="margin: auto;" id="repo-name">Repositório:</h2>
+            <h2 style="margin: auto;" id="repo-created">Criação:</h2>
+        </div>
+        <div class="col-6">
+            <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
+                <h2 style="margin: auto;">Commits não registrados:</h2>
+            </div>
+            <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
+                <ul class="m-auto list-group" id="commit-unregistered-list">
+                </ul>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
+                <h2 style="margin: auto;">Commits registrados:</h2>
+            </div>
+            <div class="d-flex p-2" style="flex: 0 0 100%; height: fit-content;">
+                <ul class="m-auto list-group" id="commit-registered-list">
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

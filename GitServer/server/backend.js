@@ -6,6 +6,33 @@ const path_to_repos = '..';
 
 app.use(express.json());
 
+// FILES
+app.get('/:repo/register-commit', (req,res) =>
+{
+    res.sendFile(__dirname+'/register-commit.html');
+})
+
+app.get('/:repo/repo-info.html', (req,res) =>
+{
+    res.sendFile(__dirname+'/repo-info.html');
+})
+
+app.get('/commit.js', (req,res) =>
+{
+    res.sendFile(__dirname+'/commit.js');
+})
+
+// CONTROLLERS
+app.get('/:repo/commit-info/:commit', (req,res) =>
+{
+    fs.readFile(`${path_to_repos}/${req.params.repo}.git/commits-register/${req.params.commit}.json`, 'utf8' , (err, data) => {
+        if (err) {
+            console.error(err);
+            return
+        }
+        res.json(JSON.parse(data));
+    });
+})
 app.get('/:repo/commits-unregistered',(req,res) => {
 
     const commits_folder = `${path_to_repos}/${req.params.repo}.git/commits-register/`;
@@ -23,7 +50,7 @@ app.get('/:repo/commits-unregistered',(req,res) => {
     
 })
 
-app.get('/:repo/commits-unregistered',(req,res) => {
+app.get('/:repo/commits-registered',(req,res) => {
 
     const commits_folder = `${path_to_repos}/${req.params.repo}.git/commits-register/`;
     const commits_files = [];
@@ -39,9 +66,20 @@ app.get('/:repo/commits-unregistered',(req,res) => {
     });
 })
 
-app.get('/:repo/register-commit', (req,res) =>
+app.get('/:repo/repo-info', (req,res) =>
 {
-    res.sendFile(__dirname+'/register-commit.html');
+    fs.stat(`${path_to_repos}/${req.params.repo}.git/`, (err, stats) => {
+        if(err)
+        {
+            console.log(err);
+            throw err;
+        }
+    
+        res.json(JSON.stringify({
+            repo_name: req.params.repo,
+            repo_creation_date: stats.birthtime,
+        }));
+    });
 })
 
 app.post('/:repo/register-commits', (req,res) =>
@@ -57,11 +95,6 @@ app.post('/:repo/register-commits', (req,res) =>
         fs.writeFileSync(commit_file,JSON.stringify(commit_json));
     }
     res.send('Commit(s) registered!');
-})
-
-app.get('/commit.js', (req,res) =>
-{
-    res.sendFile(__dirname+'/commit.js');
 })
 
 app.listen(PORT ,()=>console.log(`Connected to ${PORT}`))

@@ -24,7 +24,7 @@
                     if(commits.length == 0)
                     {
                         let list = document.getElementById('commit-list');
-                        list.innerHTML = '<li class="list-group-item d-flex align-items-center justify-content-center">Nenhum commit com registro pendente!</li>';
+                        list.innerHTML = '<li class="list-group-item d-flex align-items-center justify-content-center">Nenhum commit não registrado!</li>';
                     }
                     else
                     {
@@ -47,10 +47,8 @@
                         });
                     }
                 })
-                .then(data => console.log(data))
                 .catch(err => console.error(err));
 
-                
             const register_ethereum = async ()=>{
                 // get the commit ids selected and mint each one
                 let commit_ids = [];
