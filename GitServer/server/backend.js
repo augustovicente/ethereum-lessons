@@ -97,4 +97,20 @@ app.post('/:repo/register-commits', (req,res) =>
     res.send('Commit(s) registered!');
 })
 
+app.post('/signup', (req,res) =>
+{
+    const {name, email, sshkey} = req.body;
+    // save data
+    fs.writeFileSync(`${path_to_repos}/users/${name}.json`, JSON.stringify({
+        name,
+        email,
+        sshkey,
+    }));
+
+    // save new ssh in authorized_keys
+    fs.appendFileSync(`${path_to_repos}/../keys/id_rsa.pub`, `\n${sshkey}`);
+
+    res.send('User registered!');
+})
+
 app.listen(PORT ,()=>console.log(`Connected to ${PORT}`))

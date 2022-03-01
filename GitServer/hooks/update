@@ -8,7 +8,7 @@ let commit_info = {
     'commit_message': '',
     'commit_date': '',
     'commit_author': '',
-    'commit_branch': process.argv[3],
+    'commit_branch': process.argv[2],
     'commit_owner': '',
     'commit_repo': '',
     'commit_status': 'unregistered',
