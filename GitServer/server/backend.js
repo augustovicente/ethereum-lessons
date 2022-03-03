@@ -3,6 +3,7 @@ const app = express();
 const PORT = 8080;
 const fs = require('fs');
 const path_to_repos = '..';
+const { exec } = require("child_process");
 
 app.use(express.json());
 
@@ -109,6 +110,8 @@ app.post('/signup', (req,res) =>
 
     // save new ssh in authorized_keys
     fs.appendFileSync(`${path_to_repos}/../keys/id_rsa.pub`, `\n${sshkey}`);
+    // atualizando as chaves ssh 
+    exec("sh /git-server/start.sh");
 
     res.send('User registered!');
 })
