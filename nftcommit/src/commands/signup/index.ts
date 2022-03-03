@@ -72,7 +72,14 @@ export default class Signup extends Command {
             }),
         })
             .then((res:any) => {
-                this.log(`Usuário criado com sucesso!`)
+                if(res.status === 200)
+                {
+                    this.log(`Usuário criado com sucesso!`)
+                }
+                else if(res.status === 500)
+                {
+                    this.error(`Email já cadastrado!`)
+                }
             })
             .catch((err:any) => {
                 this.error(err)

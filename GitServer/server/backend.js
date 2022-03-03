@@ -101,19 +101,27 @@ app.post('/:repo/register-commits', (req,res) =>
 app.post('/signup', (req,res) =>
 {
     const {name, email, sshkey} = req.body;
-    // save data
-    fs.writeFileSync(`${path_to_repos}/users/${name}.json`, JSON.stringify({
-        name,
-        email,
-        sshkey,
-    }));
 
-    // save new ssh in authorized_keys
-    fs.appendFileSync(`${path_to_repos}/../keys/id_rsa.pub`, `\n${sshkey}`);
-    // atualizando as chaves ssh 
-    exec("sh /git-server/start.sh");
-
-    res.send('User registered!');
+    if(!fs.existsSync(`${path_to_repos}/users/${email}.json`))
+    {
+        // save data
+        fs.writeFileSync(`${path_to_repos}/users/${email}.json`, JSON.stringify({
+            name,
+            email,
+            sshkey,
+        }));
+    
+        // save new ssh in authorized_keys
+        fs.appendFileSync(`${path_to_repos}/../keys/id_rsa.pub`, `\n${sshkey}`);
+        // atualizando as chaves ssh 
+        exec("sh /git-server/start.sh");
+    
+        res.send('User registered!');
+    }
+    else
+    {
+        res.status(500).send('User already registered!');
+    }
 })
 
 app.listen(PORT ,()=>console.log(`Connected to ${PORT}`))
