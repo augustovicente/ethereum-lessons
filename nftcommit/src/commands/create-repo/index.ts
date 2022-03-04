@@ -1,8 +1,8 @@
-import { Command, Flags, } from '@oclif/core'
+import { Command } from '@oclif/core'
 import * as inquirer from 'inquirer'
-import * as fs from 'fs';
+import { api } from '../../api';
 const fetch = require("node-fetch");
-const { exec, spawn } = require("child_process");
+const { spawn } = require("child_process");
 
 export default class CreateRepo extends Command {
     static description = 'Criar Repositório NFTCommit'
@@ -27,7 +27,7 @@ export default class CreateRepo extends Command {
             },
         ])
 
-        let response = await fetch('http://localhost:8080/create-repo', {
+        let response = await fetch(api+'create-repo', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ export default class CreateRepo extends Command {
             .then((res:any) => {
                 if(res.status === 200)
                 {
-                    this.log(`Repositório criado com sucesso!`);
+                    this.log(`✅ Repositório criado com sucesso!`);
                     spawn('git', [
                         'clone',
                         `ssh://git@localhost:2222/git-server/repos/${user_responses.name}.git`

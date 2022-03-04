@@ -40,13 +40,16 @@ app.get('/:repo/commits-unregistered',(req,res) => {
     const commits_files = [];
 
     fs.readdir(commits_folder, (err, files) => {
-        files.forEach(file => {
-            if(file.endsWith('.json'))
-            {
-                commits_files.push(JSON.parse(fs.readFileSync(commits_folder+file)));
-            }
-        });
-        res.json(JSON.stringify(commits_files.filter(commit => commit.commit_status === 'unregistered')));
+        if(files && files.length !== 0)
+        {
+            files.forEach(file => {
+                if(file.endsWith('.json'))
+                {
+                    commits_files.push(JSON.parse(fs.readFileSync(commits_folder+file)));
+                }
+            });
+            res.json(JSON.stringify(commits_files.filter(commit => commit.commit_status === 'unregistered')));
+        }
     });
     
 })

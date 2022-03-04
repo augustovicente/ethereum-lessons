@@ -21,6 +21,7 @@
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.0.1",
     "@types/inquirer": "^8.2.0",
+    "cli-ux": "^6.0.9",
     "inquirer": "^8.2.0"
   },
   "devDependencies": {

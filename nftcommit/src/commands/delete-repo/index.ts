@@ -1,8 +1,7 @@
-import { Command, Flags, } from '@oclif/core'
+import { Command } from '@oclif/core'
 import * as inquirer from 'inquirer'
-import * as fs from 'fs';
+import { api } from '../../api';
 const fetch = require("node-fetch");
-const { exec, spawn } = require("child_process");
 
 export default class DeleteRepo extends Command {
     static description = 'Deletar Repositório Existente'
@@ -34,7 +33,7 @@ export default class DeleteRepo extends Command {
         if(user_responses.confirm)
         {
             this.log(`Deletando...`);
-            let response = await fetch('http://localhost:8080/delete-repo', {
+            let response = await fetch(api+'delete-repo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +45,7 @@ export default class DeleteRepo extends Command {
                 .then((res:any) => {
                     if(res.status === 200)
                     {
-                        this.log(`Repositório deletado com sucesso! Caso deseje remover localmente, execute o comando: rm -R ${user_responses.name}`);
+                        this.log(`✅ Repositório deletado com sucesso! Caso deseje remover localmente, execute o comando: rm -R ${user_responses.name}`);
                     }
                     else if(res.status === 500)
                     {

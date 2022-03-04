@@ -1,16 +1,20 @@
-import { Command, Flags, } from '@oclif/core'
-import * as inquirer from 'inquirer'
-import * as fs from 'fs';
+import { Command, Flags } from '@oclif/core'
 const fetch = require("node-fetch");
-const { exec, spawn } = require("child_process");
+import {cli} from 'cli-ux'
+import { api } from '../../api';
 
 export default class ListRepos extends Command {
+    
     static description = 'Listar Repositórios Existentes'
 
     static examples = [`$ nftcommit signup`]
 
     async run(): Promise<void> {
-        let response = await fetch('http://localhost:8080/list-repos', {
+        const {flags}:any = {
+            ...cli.table.flags()
+        }
+
+        let response = await fetch(api+'list-repos', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -19,7 +23,20 @@ export default class ListRepos extends Command {
             .then(async (res:any) => {
                 if(res.status === 200)
                 {
-                    this.log(await res.json());
+                    let repos = JSON.parse(await res.json())
+                        .map((repo:any) => ({
+                            nome: repo.replace('.git', ''),
+                            link: `${api+repo.replace('.git', '')}/repo-info.html`
+                        }))
+                
+                    cli.table(repos, {
+                        nome: {
+                            minWidth: 20,
+                        },
+                        link: {
+                            minWidth: 20,
+                        }
+                    }, { ...flags })
                 }
                 else if(res.status === 500)
                 {

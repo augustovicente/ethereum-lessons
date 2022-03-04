@@ -1,6 +1,7 @@
-import { Command, Flags, } from '@oclif/core'
+import { Command } from '@oclif/core'
 import * as inquirer from 'inquirer'
 import * as fs from 'fs';
+import { api } from '../../api';
 const fetch = require("node-fetch");
 
 export default class Signup extends Command {
@@ -60,7 +61,7 @@ export default class Signup extends Command {
         let sshkey = fs.readFileSync(sshkeypath).toString()
         
         // enviando dados para o servidor
-        let response = await fetch('http://localhost:8080/signup', {
+        let response = await fetch(api+'signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
