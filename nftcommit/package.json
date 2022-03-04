@@ -1,15 +1,19 @@
 {
-  "name": "nftcommit",
+  "name": "@devguto/nftcommit",
   "version": "0.0.0",
   "description": "Client interface for interaction with nftcommit software",
   "author": "Augusto Vicente @augustovicente",
   "bin": {
+    "@devguto/nftcommit": "bin/run",
     "nftcommit": "./bin/run"
   },
   "homepage": "https://github.com/augustovicente/nft-commit",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": "augustovicente/nft-commit",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "/bin",
     "/dist",
@@ -70,7 +74,11 @@
   },
   "bugs": "https://github.com/augustovicente/nft-commit/issues",
   "keywords": [
-    "oclif"
+    "create-repo",
+    "delete-repo",
+    "list-repos",
+    "signup",
+    "register-commit"
   ],
   "types": "dist/index.d.ts"
 }
