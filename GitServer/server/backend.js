@@ -135,6 +135,7 @@ app.post('/create-repo', (req,res) =>
         'mkdir ../'+repo_name,
         `cd ../${repo_name} && git init --shared=true `,
         `cd ../ && git clone --bare ${repo_name} ${repo_name}.git`,
+        `cd ../${repo_name}.git && cp ../server/update ./hooks/`,
     ]
     
     exec(commands[0], (err, stdout, stderr) => {
@@ -162,9 +163,20 @@ app.post('/create-repo', (req,res) =>
                         }
                         else
                         {
-                            exec("rm -R ../"+repo_name);
-                            console.log(`Setup do repositório local concluído!`);
-                            res.send('Repositório criado com sucesso!');
+                            exec(commands[3], (err, stdout, stderr) => {
+                                if(err)
+                                {
+                                    exec("rm -R ../"+repo_name);
+                                    res.status(500).send("Não foi possível criar o hook. Tente novamente mais tarde.");                                            
+                                }
+                                else
+                                {
+                                    
+                                    exec("rm -R ../"+repo_name);
+                                    console.log(`Hook Criado!`);
+                                    res.send('Repositório criado com sucesso!');
+                                }
+                            });
                         }
                     });
                 }
