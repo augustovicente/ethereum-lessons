@@ -124,4 +124,99 @@ app.post('/signup', (req,res) =>
     }
 })
 
+app.post('/create-repo', (req,res) =>
+{
+    const {name: repo_name} = req.body;
+
+    let commands = [
+        'mkdir ../'+repo_name,
+        `cd ../${repo_name} && git init --shared=true `,
+        `cd ../ && git clone --bare ${repo_name} ${repo_name}.git`,
+    ]
+    
+    exec(commands[0], (err, stdout, stderr) => {
+        if(err)
+        {
+            res.status(500).send("Nome do repositório não é válido! Por favor, selecione outro.");
+        }
+        else
+        {
+            console.log(`Pasta criada com sucesso!`);
+            exec(commands[1], (err, stdout, stderr) => {
+                if(err)
+                {
+                    exec("rm -R ../"+repo_name);
+                    res.status(500).send("Não foi possível iniciar o repositório. Tente novamente mais tarde.");
+                }
+                else
+                {
+                    console.log(`Repositório iniciado com sucesso!`);
+                    exec(commands[2], (err, stdout, stderr) => {
+                        if(err)
+                        {
+                            exec("rm -R ../"+repo_name);
+                            res.status(500).send("Não foi possível clonar o repositório. Tente novamente mais tarde.");                                            
+                        }
+                        else
+                        {
+                            exec("rm -R ../"+repo_name);
+                            console.log(`Setup do repositório local concluído!`);
+                            res.send('Repositório criado com sucesso!');
+                        }
+                    });
+                }
+            });
+        }
+    });
+})
+
+app.post('/delete-repo', (req,res) =>
+{
+    const {name: repo_name} = req.body;
+
+    let commands = [
+        'rm -R ../'+repo_name+'.git',
+    ]
+    
+    exec(commands[0], (err, stdout, stderr) => {
+        if(err)
+        {
+            res.status(500).send("Nome do repositório não é válido! Por favor, selecione outro.");
+        }
+        else
+        {
+            console.log(`Repositório removido com sucesso!`);
+            res.send('Repositório removido com sucesso!');
+        }
+    });
+})
+
+app.get('/list-repos', (req,res) =>
+{
+    const getDirectories = (source, callback) => {
+        return fs.readdir(source, { withFileTypes: true }, (err, files) => {
+            if(err)
+            {
+                callback(err)
+            }
+            else
+            {
+                callback(null, files.filter(f => !["server", "users"].includes(f)))
+            }
+        })
+    }
+
+    getDirectories(path_to_repos+'/', (err, files) => {
+        if(err)
+        {
+            console.log(err);
+            res.status(500).send(err);
+        }
+        else
+        {
+            res.json(JSON.stringify(files));
+        }
+    })
+})
+
 app.listen(PORT ,()=>console.log(`Connected to ${PORT}`))
