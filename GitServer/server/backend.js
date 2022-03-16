@@ -60,13 +60,20 @@ app.get('/:repo/commits-registered',(req,res) => {
     const commits_files = [];
 
     fs.readdir(commits_folder, (err, files) => {
-        files.forEach(file => {
-            if(file.endsWith('.json'))
-            {
-                commits_files.push(JSON.parse(fs.readFileSync(commits_folder+file)));
-            }
-        });
-        res.json(JSON.stringify(commits_files.filter(commit => commit.commit_status === 'registered')));
+        if(files && files.length !== 0)
+        {
+            files.forEach(file => {
+                if(file.endsWith('.json'))
+                {
+                    commits_files.push(JSON.parse(fs.readFileSync(commits_folder+file)));
+                }
+            });
+            res.json(JSON.stringify(commits_files.filter(commit => commit.commit_status === 'registered')));
+        }
+        else
+        {
+            res.json(JSON.stringify(commits_files));
+        }
     });
 })
 
@@ -190,25 +197,33 @@ app.post('/create-repo/:user', (req,res) =>
     });
 })
 
-app.post('/delete-repo', (req,res) =>
+app.post('/delete-repo/:user', (req,res) =>
 {
     const {name: repo_name} = req.body;
+    let user_data = JSON.parse(fs.readFileSync(`${path_to_repos}/users/${req.params.user}.json`));
 
-    let commands = [
-        'rm -R ../'+repo_name+'.git',
-    ]
-    
-    exec(commands[0], (err, stdout, stderr) => {
-        if(err)
-        {
-            res.status(500).send("Nome do repositório não é válido! Por favor, selecione outro.");
-        }
-        else
-        {
-            console.log(`Repositório removido com sucesso!`);
-            res.send('Repositório removido com sucesso!');
-        }
-    });
+    if(!user_data.repos.includes(repo_name))
+    {
+        return res.status(500).send({erro: 'Repositório não encontrado!'});
+    }
+    else
+    {
+        let commands = [
+            'rm -R ../'+repo_name+'.git',
+        ]
+        
+        exec(commands[0], (err, stdout, stderr) => {
+            if(err)
+            {
+                res.status(500).send("Nome do repositório não é válido! Por favor, selecione outro.");
+            }
+            else
+            {
+                console.log(`Repositório removido com sucesso!`);
+                res.send('Repositório removido com sucesso!');
+            }
+        });
+    }
 })
 
 app.get('/list-repos/:user', (req,res) =>

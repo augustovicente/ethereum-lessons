@@ -2,6 +2,8 @@ import { Command } from '@oclif/core'
 import * as inquirer from 'inquirer'
 import { api } from '../../api';
 const fetch = require("node-fetch");
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 export default class DeleteRepo extends Command {
     static description = 'Deletar Repositório Existente'
@@ -33,7 +35,8 @@ export default class DeleteRepo extends Command {
         if(user_responses.confirm)
         {
             this.log(`Deletando...`);
-            let response = await fetch(api+'delete-repo', {
+            let user_mail = fs.readJSONSync(path.join(this.config.configDir, 'config.json')).NFTCOMMIT_USER;
+            let response = await fetch(api+'delete-repo/'+user_mail, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
