@@ -3,6 +3,8 @@ import * as inquirer from 'inquirer'
 import * as fs from 'fs';
 import { api } from '../../api';
 const fetch = require("node-fetch");
+import * as _fs from 'fs-extra';
+import * as path from 'path';
 
 export default class Signup extends Command {
     static description = 'Inscrever-se no sistema'
@@ -75,7 +77,12 @@ export default class Signup extends Command {
             .then((res:any) => {
                 if(res.status === 200)
                 {
-                    this.log(`Usuário criado com sucesso!`)
+                    this.log(`Usuário criado com sucesso!`);
+                    if(!fs.existsSync(this.config.configDir))
+                    {
+                        _fs.mkdirSync(this.config.configDir);
+                    }
+                    _fs.writeFileSync( path.join(this.config.configDir, 'config.json'), JSON.stringify({NFTCOMMIT_USER: user_responses.email}));
                 }
                 else if(res.status === 500)
                 {

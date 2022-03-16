@@ -112,6 +112,7 @@ app.post('/signup', (req,res) =>
             name,
             email,
             sshkey,
+            repos: []
         }));
     
         // save new ssh in authorized_keys
@@ -127,7 +128,7 @@ app.post('/signup', (req,res) =>
     }
 })
 
-app.post('/create-repo', (req,res) =>
+app.post('/create-repo/:user', (req,res) =>
 {
     const {name: repo_name} = req.body;
 
@@ -171,9 +172,13 @@ app.post('/create-repo', (req,res) =>
                                 }
                                 else
                                 {
-                                    
                                     exec("rm -R ../"+repo_name);
                                     console.log(`Hook Criado!`);
+                                    // atualizando repos do usuário
+                                    let user_data = JSON.parse(fs.readFileSync(`${path_to_repos}/users/${req.params.user}.json`));
+                                    user_data.repos.push(repo_name);
+                                    fs.writeFileSync(`${path_to_repos}/users/${decodeURI(req.params.user)}.json`, JSON.stringify(user_data));
+
                                     res.send('Repositório criado com sucesso!');
                                 }
                             });
@@ -206,32 +211,36 @@ app.post('/delete-repo', (req,res) =>
     });
 })
 
-app.get('/list-repos', (req,res) =>
+app.get('/list-repos/:user', (req,res) =>
 {
-    const getDirectories = (source, callback) => {
-        return fs.readdir(source, { withFileTypes: true }, (err, files) => {
-            if(err)
-            {
-                callback(err)
-            }
-            else
-            {
-                callback(null, files.filter(f => !["server", "users"].includes(f)))
-            }
-        })
-    }
+    // returning only user repos
+    let user_data = JSON.parse(fs.readFileSync(`${path_to_repos}/users/${req.params.user}.json`));
+    res.json(JSON.stringify(user_data.repos.map(repo => (repo+".git") )));
 
-    getDirectories(path_to_repos+'/', (err, files) => {
-        if(err)
-        {
-            console.log(err);
-            res.status(500).send(err);
-        }
-        else
-        {
-            res.json(JSON.stringify(files));
-        }
-    })
+    // in the past used to list all repos
+    // const getDirectories = (source, callback) => {
+    //     return fs.readdir(source, { withFileTypes: true }, (err, files) => {
+    //         if(err)
+    //         {
+    //             callback(err)
+    //         }
+    //         else
+    //         {
+    //             callback(null, files.filter(f => !["server", "users"].includes(f)))
+    //         }
+    //     })
+    // }
+    // getDirectories(path_to_repos+'/', (err, files) => {
+    //     if(err)
+    //     {
+    //         console.log(err);
+    //         res.status(500).send(err);
+    //     }
+    //     else
+    //     {
+    //         res.json(JSON.stringify(files));
+    //     }
+    // })
 })
 
 app.listen(PORT ,()=>console.log(`Connected to ${PORT}`))

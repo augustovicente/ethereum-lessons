@@ -2,6 +2,8 @@ import { Command, Flags } from '@oclif/core'
 const fetch = require("node-fetch");
 import {cli} from 'cli-ux'
 import { api } from '../../api';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 export default class ListRepos extends Command {
     
@@ -14,7 +16,8 @@ export default class ListRepos extends Command {
             ...cli.table.flags()
         }
 
-        let response = await fetch(api+'list-repos', {
+        let user_mail = fs.readJSONSync(path.join(this.config.configDir, 'config.json')).NFTCOMMIT_USER;
+        let response = await fetch(api+'list-repos/'+user_mail, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

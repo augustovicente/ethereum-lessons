@@ -3,6 +3,8 @@ import { cli } from 'cli-ux'
 import inquirer = require('inquirer')
 const fetch = require("node-fetch");
 import { api } from '../../api'
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 export default class RegisterCommit extends Command {
     static description = 'Registrar um commit como NFT pela NFTCommit'
@@ -10,7 +12,8 @@ export default class RegisterCommit extends Command {
     static examples = [`$ nftcommit signup`]
 
     async run(): Promise<void> {
-        let response = await fetch(api+'list-repos', {
+        let user_mail = fs.readJSONSync(path.join(this.config.configDir, 'config.json')).NFTCOMMIT_USER;
+        let response = await fetch(api+'list-repos/'+user_mail, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
