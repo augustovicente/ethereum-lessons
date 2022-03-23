@@ -20,7 +20,7 @@ $ npm install -g nftcommit
 $ nftcommit COMMAND
 running command...
 $ nftcommit (--version)
-nftcommit/0.0.0 darwin-x64 node-v14.16.1
+nftcommit/0.0.5 darwin-x64 node-v14.16.1
 $ nftcommit --help [COMMAND]
 USAGE
   $ nftcommit COMMAND
@@ -29,15 +29,91 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`nftcommit create-repo`](#nftcommit-create-repo)
+* [`nftcommit create-repo world`](#nftcommit-create-repo-world)
+* [`nftcommit delete-repo`](#nftcommit-delete-repo)
+* [`nftcommit delete-repo world`](#nftcommit-delete-repo-world)
 * [`nftcommit hello PERSON`](#nftcommit-hello-person)
 * [`nftcommit hello world`](#nftcommit-hello-world)
 * [`nftcommit help [COMMAND]`](#nftcommit-help-command)
+* [`nftcommit list-repos`](#nftcommit-list-repos)
+* [`nftcommit list-repos world`](#nftcommit-list-repos-world)
 * [`nftcommit plugins`](#nftcommit-plugins)
 * [`nftcommit plugins:inspect PLUGIN...`](#nftcommit-pluginsinspect-plugin)
 * [`nftcommit plugins:install PLUGIN...`](#nftcommit-pluginsinstall-plugin)
 * [`nftcommit plugins:link PLUGIN`](#nftcommit-pluginslink-plugin)
 * [`nftcommit plugins:uninstall PLUGIN...`](#nftcommit-pluginsuninstall-plugin)
 * [`nftcommit plugins update`](#nftcommit-plugins-update)
+* [`nftcommit register-commit`](#nftcommit-register-commit)
+* [`nftcommit register-commit world`](#nftcommit-register-commit-world)
+* [`nftcommit signup`](#nftcommit-signup)
+* [`nftcommit signup world`](#nftcommit-signup-world)
+
+## `nftcommit create-repo`
+
+Criar Repositório NFTCommit
+
+```
+USAGE
+  $ nftcommit create-repo
+
+DESCRIPTION
+  Criar Repositório NFTCommit
+
+EXAMPLES
+  $ nftcommit signup
+```
+
+_See code: [dist/commands/create-repo/index.ts](https://github.com/augustovicente/nft-commit/blob/v0.0.5/dist/commands/create-repo/index.ts)_
+
+## `nftcommit create-repo world`
+
+Say hello world
+
+```
+USAGE
+  $ nftcommit create-repo world
+
+DESCRIPTION
+  Say hello world
+
+EXAMPLES
+  $ oex hello world
+  hello world! (./src/commands/hello/world.ts)
+```
+
+## `nftcommit delete-repo`
+
+Deletar Repositório Existente
+
+```
+USAGE
+  $ nftcommit delete-repo
+
+DESCRIPTION
+  Deletar Repositório Existente
+
+EXAMPLES
+  $ nftcommit signup
+```
+
+_See code: [dist/commands/delete-repo/index.ts](https://github.com/augustovicente/nft-commit/blob/v0.0.5/dist/commands/delete-repo/index.ts)_
+
+## `nftcommit delete-repo world`
+
+Say hello world
+
+```
+USAGE
+  $ nftcommit delete-repo world
+
+DESCRIPTION
+  Say hello world
+
+EXAMPLES
+  $ oex hello world
+  hello world! (./src/commands/hello/world.ts)
+```
 
 ## `nftcommit hello PERSON`
 
@@ -61,7 +137,7 @@ EXAMPLES
   hello friend from oclif! (./src/commands/hello/index.ts)
 ```
 
-_See code: [dist/commands/hello/index.ts](https://github.com/augustovicente/nft-commit/blob/v0.0.0/dist/commands/hello/index.ts)_
+_See code: [dist/commands/hello/index.ts](https://github.com/augustovicente/nft-commit/blob/v0.0.5/dist/commands/hello/index.ts)_
 
 ## `nftcommit hello world`
 
@@ -97,7 +173,40 @@ DESCRIPTION
   Display help for nftcommit.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.10/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.11/src/commands/help.ts)_
+
+## `nftcommit list-repos`
+
+Listar Repositórios Existentes
+
+```
+USAGE
+  $ nftcommit list-repos
+
+DESCRIPTION
+  Listar Repositórios Existentes
+
+EXAMPLES
+  $ nftcommit signup
+```
+
+_See code: [dist/commands/list-repos/index.ts](https://github.com/augustovicente/nft-commit/blob/v0.0.5/dist/commands/list-repos/index.ts)_
+
+## `nftcommit list-repos world`
+
+Say hello world
+
+```
+USAGE
+  $ nftcommit list-repos world
+
+DESCRIPTION
+  Say hello world
+
+EXAMPLES
+  $ oex hello world
+  hello world! (./src/commands/hello/world.ts)
+```
 
 ## `nftcommit plugins`
 
@@ -243,5 +352,71 @@ FLAGS
 
 DESCRIPTION
   Update installed plugins.
+```
+
+## `nftcommit register-commit`
+
+Registrar um commit como NFT pela NFTCommit
+
+```
+USAGE
+  $ nftcommit register-commit
+
+DESCRIPTION
+  Registrar um commit como NFT pela NFTCommit
+
+EXAMPLES
+  $ nftcommit signup
+```
+
+_See code: [dist/commands/register-commit/index.ts](https://github.com/augustovicente/nft-commit/blob/v0.0.5/dist/commands/register-commit/index.ts)_
+
+## `nftcommit register-commit world`
+
+Say hello world
+
+```
+USAGE
+  $ nftcommit register-commit world
+
+DESCRIPTION
+  Say hello world
+
+EXAMPLES
+  $ oex hello world
+  hello world! (./src/commands/hello/world.ts)
+```
+
+## `nftcommit signup`
+
+Inscrever-se no sistema
+
+```
+USAGE
+  $ nftcommit signup
+
+DESCRIPTION
+  Inscrever-se no sistema
+
+EXAMPLES
+  $ nftcommit signup
+```
+
+_See code: [dist/commands/signup/index.ts](https://github.com/augustovicente/nft-commit/blob/v0.0.5/dist/commands/signup/index.ts)_
+
+## `nftcommit signup world`
+
+Say hello world
+
+```
+USAGE
+  $ nftcommit signup world
+
+DESCRIPTION
+  Say hello world
+
+EXAMPLES
+  $ oex hello world
+  hello world! (./src/commands/hello/world.ts)
 ```
 <!-- commandsstop -->

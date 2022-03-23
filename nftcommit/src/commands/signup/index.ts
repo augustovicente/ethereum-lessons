@@ -1,11 +1,11 @@
 import { Command } from '@oclif/core'
 import * as inquirer from 'inquirer'
 import * as fs from 'fs';
-import { api } from '../../api';
+// import { api } from '../../api';
+const api = "http://localhost:8080/"
 const fetch = require("node-fetch");
 import * as _fs from 'fs-extra';
 import * as path from 'path';
-
 export default class Signup extends Command {
     static description = 'Inscrever-se no sistema'
 

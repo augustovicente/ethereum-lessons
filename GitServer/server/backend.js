@@ -185,6 +185,7 @@ app.post('/create-repo/:user', (req,res) =>
                                     let user_data = JSON.parse(fs.readFileSync(`${path_to_repos}/users/${req.params.user}.json`));
                                     user_data.repos.push(repo_name);
                                     fs.writeFileSync(`${path_to_repos}/users/${decodeURI(req.params.user)}.json`, JSON.stringify(user_data));
+                                    fs.mkdirSync(`${path_to_repos}/${repo_name}.git/commits-register`);
 
                                     res.send('Repositório criado com sucesso!');
                                 }

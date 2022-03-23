@@ -16,7 +16,7 @@ let commit_info = {
 
 const get_info = () => {
     return new Promise((resolve, reject) => {
-        exec(`git show --pretty=format:"Info:%an,%ad,%s" c426ab80d64f7c36d550161f9afce7b833d40634 | grep Info`, (error, stdout, stderr) => {
+        exec(`git show --pretty=format:"Info:%an,%ad,%s" ${process.argv[4]} | grep Info`, (error, stdout, stderr) => {
             if(error || stderr)
             {
                 reject(error || stderr);
