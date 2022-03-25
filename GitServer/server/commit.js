@@ -1,7 +1,7 @@
 window.ethereum.request({ method: "eth_requestAccounts" });
 const web3 = new Web3(window.ethereum);
 
-const address = '0xF8013B1580A05b992967E650FD99b844038c4E56';
+const address = '0x92F33C6E617E8b155b001565c66737028db1772E';
 const abi = [
 	{
 		"inputs": [],

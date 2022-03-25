@@ -34,6 +34,46 @@ app.get('/:repo/commit-info/:commit', (req,res) =>
         res.json(JSON.parse(data));
     });
 })
+app.get('/commit-info/:commit', (req,res) =>
+{
+    const getDirectories = (source, callback) => {
+        return fs.readdir(source, { withFileTypes: true }, (err, files) => {
+            if(err)
+            {
+                callback(err)
+            }
+            else
+            {
+                callback(null, files.filter(f => !["server", "users"].includes(f)))
+            }
+        })
+    }
+    getDirectories(path_to_repos+'/', (err, repos) => {
+        if(err)
+        {
+            console.log(err);
+            res.status(500).send(err);
+        }
+        else
+        {
+            for(const repo of repos)
+            {
+                if(fs.existsSync(`${path_to_repos}/${repo}/commits-register/${req.params.commit}.json`))
+                {
+                    fs.readFile(`${path_to_repos}/${repo}/commits-register/${req.params.commit}.json`, 'utf8' , (err, data) => {
+                        if (err) {
+                            console.error(err);
+                            return
+                        }
+                        res.json(JSON.parse(data));
+                    });
+                    return;
+                }
+            }
+            res.status(404).send("Commit not found");
+        }
+    })
+})
 app.get('/:repo/commits-unregistered',(req,res) => {
 
     const commits_folder = `${path_to_repos}/${req.params.repo}.git/commits-register/`;
@@ -95,7 +135,7 @@ app.get('/:repo/repo-info', (req,res) =>
 
 app.post('/:repo/register-commits', (req,res) =>
 {
-    const commit_data = req.body;
+    const {commit_ids: commit_data, account} = req.body;
     const commits_folder = `${path_to_repos}/${req.params.repo}.git/commits-register/`;
 
     for(const commit_id of commit_data)
@@ -103,6 +143,8 @@ app.post('/:repo/register-commits', (req,res) =>
         const commit_file = commits_folder+commit_id+'.json';
         const commit_json = JSON.parse(fs.readFileSync(commit_file));
         commit_json.commit_status = 'registered';
+        commit_json.commit_repo = req.params.repo;
+        commit_json.commit_owner = account;
         fs.writeFileSync(commit_file,JSON.stringify(commit_json));
     }
     res.send('Commit(s) registered!');

@@ -9,6 +9,7 @@ contract Commit is ERC1155, Ownable
     uint256 public last_id = 0;
 
     mapping(string => uint256) public commits;
+    mapping(uint256 => string) public commits_inverse;
 
     constructor() ERC1155("") {}
 
@@ -21,92 +22,58 @@ contract Commit is ERC1155, Ownable
     {
         return (
             string(abi.encodePacked(
-                "http://localhost:3000/",
-                Strings.toString(commits[commit])
+                "http://localhost:8080/commit-info/",
+                commit
+            ))
+        );
+    }
+    function uri(uint256 commit_id) override public view returns (string memory)
+    {
+        return (
+            string(abi.encodePacked(
+                "http://localhost:8080/",
+                commits_inverse[commit_id]
             ))
         );
     }
 
     function owner_mint(address account, uint256 amount, string memory data) public onlyOwner
     {
-        if(last_id > 0)
-        {
-            // incrementando quando necessário
-            last_id++;
-            // mintando
-            _mint(account, last_id, amount, "");
-            // armazenando o novo commit
-            commits[data] = last_id;
-        }
-        else
-        {
-            // mintando
-            _mint(account, last_id, amount, "");
-            commits[data] = last_id;
-            // incrementando quando necessário
-            last_id++;
-        }
+        // mintando
+        _mint(account, last_id, amount, "");
+        commits[data] = last_id;
+        commits_inverse[last_id] = data;
+        // incrementando quando necessário
+        last_id++;
     }
 
     function mint(uint256 amount, string memory data) public payable
     {
         // require(msg.value >= 0.1 ether, "To register the commit you should pay at least 0.1 ether");
-
-        if(last_id > 0)
-        {
-            // incrementando quando necessário
-            last_id++;
-            // mintando
-            _mint(msg.sender, last_id, amount, "");
-            // armazenando o novo commit
-            commits[data] = last_id;
-        }
-        else
-        {
-            // mintando
-            _mint(msg.sender, last_id, amount, "");
-            commits[data] = last_id;
-            // incrementando quando necessário
-            last_id++;
-        }
+        // mintando
+        _mint(msg.sender, last_id, amount, "");
+        commits[data] = last_id;
+        commits_inverse[last_id] = data;
+        // incrementando quando necessário
+        last_id++;
     }
 
     function mint_batch(string[] memory data) public payable
     {
         // require(msg.value >= 0.1 ether, "To register the commit you should pay at least 0.1 ether");
-
         uint[] memory ids = new uint[](data.length);
         uint[] memory amounts = new uint[](data.length);
-        if(last_id > 0)
+        for(uint i = 0; i < (data.length); i++)
         {
-            // incrementando quando necessário
+            amounts[i] = 1;
+            ids[i] = last_id;
+            // armazenando o novo commit
+            commits[data[i]] = last_id;
+            commits_inverse[last_id] = data[i];
             last_id++;
-            for(uint i=last_id; i< data.length; i++)
-            {
-                amounts[i-last_id] = 1;
-                ids[i] = last_id;
-                // armazenando o novo commit
-                commits[data[i]] = last_id;
-                last_id++;
-            }
-
-            // mintando
-            _mintBatch(msg.sender, ids, amounts, "");
-            // _mint(msg.sender, last_id, amount, "");
         }
-        else
-        {
-            for(uint i=last_id; i< data.length; i++)
-            {
-                amounts[i-last_id] = 1;
-                ids[i] = last_id;
-                // armazenando o novo commit
-                commits[data[i]] = last_id;
-                last_id++;
-            }
-            // mintando
-            _mintBatch(msg.sender, ids, amounts, "");
-            // _mint(msg.sender, last_id, amount, "");
-        }
+        // mintando
+        _mintBatch(msg.sender, ids, amounts, "");
+        // _mint(msg.sender, last_id, amount, "");
     }
 }

@@ -80,7 +80,7 @@
                             'Access-Control-Allow-Origin': '*',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(commit_ids)
+                        body: JSON.stringify({commit_ids, account: accounts[0]})
                     })
                 });
             }
